@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <script src="js/jquery-2.1.3.min.js"></script>
+  <link rel="stylesheet" href="css/sample.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>じゃんけん</title>
+</head>
+
+<body>
+
+  <header>
+    <h1>じゃんけん</h1>
+  </header>
+
+  <main>
+    <ul>
+      <li id="gu_btn"><img src="./img/guu.jpg" alt=""></li>
+      <li id="cho_btn"><img src="./img/tyoki.jpg" alt=""></li>
+      <li id="par_btn"><img src="./img/pa.jpg" alt=""></li>
+    </ul>
+    <div class="computerHand">
+      <div>
+        <img src="./img/robot.png" alt="">
+        <p>ロボットが出した手は？</p>
+      </div>
+      <span id="pc_hands"></span>
+    </div>
+    <script>
+      document.querySelectorAll('li').forEach(item => {
+        item.addEventListener('click', function () {
+          this.classList.add('glow');
+        });
+      });
+    </script>
+    <div id="judgment"></div>
+  </main>
+
+  <footer></footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      const guBtn = document.getElementById('gu_btn');
+      const choBtn = document.getElementById('cho_btn');
+      const parBtn = document.getElementById('par_btn');
+      const pcHandsDisplay = document.getElementById('pc_hands');
+      const judgmentDisplay = document.getElementById('judgment');
+
+
+      guBtn.addEventListener('click', () => playJanken('グー'));
+      choBtn.addEventListener('click', () => playJanken('チョキ'));
+      parBtn.addEventListener('click', () => playJanken('パー'));
+
+      function playJanken(userHand) {
+        const hands = ['グー', 'チョキ', 'パー'];
+        const computerHand = hands[Math.floor(Math.random() * hands.length)];
+
+        setTimeout(() => { // 1秒後にコンピュータの手を表示
+          if (computerHand === 'グー') {
+            pcHandsDisplay.innerHTML = `<img src="./img/guu.jpg" alt="">`;
+          } else if (computerHand === 'チョキ') {
+            pcHandsDisplay.innerHTML = `<img src="./img/tyoki.jpg" alt="">`;
+          } else {
+            pcHandsDisplay.innerHTML = `<img src="./img/pa.jpg" alt="">`;
+          }
+        }, 1000);
+
+        const result = judge(userHand, computerHand);
+
+        setTimeout(() => { // 2秒後に勝敗を表示
+          if (result === '勝ち') {
+            judgmentDisplay.innerHTML = "<img src='./img/win.webp' alt='' class='fullscreen-image'></img>"
+          } else if (result === '負け') {
+            judgmentDisplay.innerHTML = "<img src='./img/lose.webp' alt='' class='fullscreen-image'></img>";
+          } else {
+            judgmentDisplay.innerHTML = "<img src='./img/draw.jpeg' alt='' class='fullscreen-image'></img>";
+          }
+        }, 2000);
+
+
+        setTimeout(() => { // 3秒後に結果を消去
+          pcHandsDisplay.textContent = '';
+          judgmentDisplay.textContent = '';
+        }, 3000);
+      }
+
+      // 勝敗の判定
+      function judge(user, computer) {
+        if (user === computer) {
+          return '引き分け';
+        } else if ((user === 'グー' && computer === 'チョキ') ||
+          (user === 'チョキ' && computer === 'パー') ||
+          (user === 'パー' && computer === 'グー')) {
+          return '勝ち';
+        } else {
+          return '負け';
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
